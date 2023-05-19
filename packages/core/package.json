@@ -1,0 +1,46 @@
+{
+  "name": "@antennajs/core",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "An InertiaJS adapter for creating server-driven single page apps fully written in JavaScript.",
+  "contributors": [
+    "Jorge González <yo@jorgeglz.io>"
+  ],
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "dist/index.cjs",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./util": {
+      "types": "./dist/types/util.d.ts",
+      "import": "./dist/util/index.js",
+      "require": "./dist/util/index.cjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "util": [
+        "dist/types/util.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development vite build --mode development --watch",
+    "build": "rm -rf dist && vite build && tsc --emitDeclarationOnly"
+  },
+  "dependencies": {
+    "@inertiajs/core": "^1.0.6"
+  },
+  "devDependencies": {
+    "type-fest": "^3.10.0",
+    "typescript": "^5.0.4",
+    "vite": "^4.3.5"
+  }
+}

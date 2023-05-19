@@ -1,0 +1,35 @@
+{
+  "name": "@antennajs/adapter-hono",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "The HonoJS adapter for Inertia.js",
+  "contributors": [
+    "Jorge González <yo@jorgeglz.io>"
+  ],
+  "files": [
+    "./dist"
+  ],
+  "type": "module",
+  "main": "dist/index.cjs",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development vite build --mode development --watch",
+    "build": "rm -rf dist && vite build && tsc --emitDeclarationOnly"
+  },
+  "dependencies": {
+    "@antennajs/core": "workspace:^"
+  },
+  "devDependencies": {
+    "hono": "^3.1.8",
+    "type-fest": "^3.10.0",
+    "typescript": "^5.0.4",
+    "vite": "^4.3.5"
+  }
+}

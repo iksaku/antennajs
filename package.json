@@ -1,0 +1,17 @@
+{
+  "name": "@antennajs/monorepo",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "scripts": {
+    "build": "pnpm -r --filter='./packages/*' run build"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.8",
+    "prettier-plugin-organize-imports": "^3.2.2",
+    "typescript": "^5.0.4",
+    "vite": "^4.3.8"
+  }
+}
