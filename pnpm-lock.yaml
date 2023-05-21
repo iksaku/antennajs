@@ -41,6 +41,9 @@ importers:
       '@inertiajs/core':
         specifier: ^1.0.6
         version: 1.0.6
+      html-entities:
+        specifier: ^2.3.3
+        version: 2.3.3
     devDependencies:
       type-fest:
         specifier: ^3.10.0
@@ -614,6 +617,10 @@ packages:
     resolution: {integrity: sha512-7UZQWuQaqn8MENla09Jdb28qiR5uXii4xR/TNQuVNxZ3+T+ZixWiQUpJG85BXNqhJ5s1SkPbLGjbc3L5wKsv5g==}
     engines: {node: '>=16.0.0'}
     dev: true
+
+  /html-entities@2.3.3:
+    resolution: {integrity: sha512-DV5Ln36z34NNTDgnz0EWGBLZENelNAtkiFA4kyNOG2tDI6Mz1uSWiq1wAKdyjnJwyDiDO7Fa2SO1CTxPXL8VxA==}
+    dev: false
 
   /mime-db@1.52.0:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}

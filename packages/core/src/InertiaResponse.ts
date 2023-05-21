@@ -1,4 +1,5 @@
 import type { Page } from '@inertiajs/core'
+import { encode } from 'html-entities'
 import { LazyProp } from './LazyProp'
 import { InertiaRenderProps, InertiaSSR, InertiaSharedProps, InertiaVersion, InertiaView } from './types'
 import { assign, objectFilter, value } from './util'
@@ -99,7 +100,7 @@ export class InertiaResponse implements PromiseLike<Response> {
     const { head, body } = !this._ssr
       ? {
           head: '',
-          body: `<div id="${this.htmlId}" data-page='${JSON.stringify(page)}'></div>`,
+          body: `<div id="${this.htmlId}" data-page="${encode(JSON.stringify(page))}"></div>`,
         }
       : await this._ssr(page)
 

@@ -1,6 +1,6 @@
 {
   "name": "@antennajs/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "description": "An InertiaJS adapter for creating server-driven single page apps fully written in JavaScript.",
   "contributors": [
@@ -40,10 +40,12 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development vite build --mode development --watch",
-    "build": "rm -rf dist && vite build && tsc --emitDeclarationOnly"
+    "build": "rm -rf dist && vite build && tsc --emitDeclarationOnly",
+    "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@inertiajs/core": "^1.0.6"
+    "@inertiajs/core": "^1.0.6",
+    "html-entities": "^2.3.3"
   },
   "devDependencies": {
     "type-fest": "^3.10.0",
