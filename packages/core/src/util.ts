@@ -52,3 +52,27 @@ export function value<TValue extends unknown>(
   // @ts-ignore
   return value
 }
+
+export function blank(value: unknown): boolean {
+  if (value === null || value === undefined) {
+    return true
+  }
+
+  if (typeof value === 'string') {
+    return value.trim() === ''
+  }
+
+  if (typeof value === 'number' || typeof value === 'bigint' || typeof value === 'boolean') {
+    return false
+  }
+
+  if (Array.isArray(value)) {
+    return value.length > 0
+  }
+
+  return !value
+}
+
+export function filled(value: unknown): boolean {
+  return !blank(value)
+}

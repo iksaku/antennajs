@@ -5,7 +5,7 @@ import {
   InertiaView,
   ThenableInertiaResponse,
 } from '@antennajs/core'
-import { tap } from '@antennajs/core/util'
+import { filled, tap } from '@antennajs/core/util'
 import { Context, MiddlewareHandler } from 'hono'
 import { Promisable } from 'type-fest'
 
@@ -95,7 +95,7 @@ export default class Inertia {
     return new Response('', {
       status: 302,
       headers: {
-        Location: new URL(request.url).origin,
+        Location: new URL(filled(request.referrer) ? request.referrer : request.url).href,
       },
     })
   }
