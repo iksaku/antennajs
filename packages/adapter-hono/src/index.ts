@@ -92,10 +92,12 @@ export default class Inertia {
   }
 
   protected static onEmptyResponse(request: Request, response: Response): Response {
+    const referer = request.headers.get('referer')
+
     return new Response('', {
       status: 302,
       headers: {
-        Location: new URL(filled(request.referrer) ? request.referrer : request.url).href,
+        Location: new URL(filled(referer) ? referer : request.url).href,
       },
     })
   }
