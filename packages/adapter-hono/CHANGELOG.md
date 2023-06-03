@@ -1,5 +1,13 @@
 # @antennajs/adapter-hono
 
+## 0.1.4
+
+### Patch Changes
+
+- 8206f79: adapter-hono: Expose Inertia.share() API
+- Updated dependencies [5633d3f]
+  - @antennajs/core@0.1.3
+
 ## 0.1.3
 
 ### Patch Changes

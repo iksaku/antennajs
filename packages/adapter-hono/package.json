@@ -1,6 +1,6 @@
 {
   "name": "@antennajs/adapter-hono",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "license": "MIT",
   "description": "The HonoJS adapter for Inertia.js",
   "contributors": [
