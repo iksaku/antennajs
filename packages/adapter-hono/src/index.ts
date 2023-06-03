@@ -17,23 +17,31 @@ type InertiaMiddlewareOptions = {
   ssr?: InertiaSSR
 }
 
+function factory(ctx: Context): InertiaCore {
+  const factory = ctx.get('Inertia') as InertiaCore | null
+
+  if (!factory) {
+    throw new Error('Inertia middleware is missing.')
+  }
+
+  return factory
+}
+
 export default class Inertia {
   public static get lazy() {
     return InertiaCore.lazy
   }
 
-  public static get location() {
-    return InertiaCore.location
+  public static location(ctx: Context, url: string | URL) {
+    return InertiaCore.location(ctx.req.raw, url)
+  }
+
+  public static share(ctx: Context, key: string | InertiaSharedProps, value?: unknown): void {
+    factory(ctx).share(key, value)
   }
 
   public static render(ctx: Context, component: string, props: InertiaSharedProps = {}): ThenableInertiaResponse {
-    const factory = ctx.get('Inertia') as InertiaCore | null
-
-    if (!factory) {
-      throw new Error('Inertia middleware is missing.')
-    }
-
-    return factory.render(ctx.req.raw, component, props)
+    return factory(ctx).render(ctx.req.raw, component, props)
   }
 
   public static middleware({
@@ -60,34 +68,28 @@ export default class Inertia {
       let response = ctx.res
       response.headers.set('Vary', 'X-Inertia')
 
-      function setResponse(res: Response) {
-        response = res
-        ctx.res = undefined
-        ctx.res = response
-      }
-
       if (!request.headers.get('X-Inertia')) {
         return
       }
 
       if (request.method === 'GET' && request.headers.get('X-Inertia-Version') !== (await factory.getVersion())) {
-        setResponse(Inertia.onVersionChange(request, response))
+        response = Inertia.onVersionChange(request, response)
       }
 
-      if (response.ok && (await response.clone().text()).trim() === '') {
-        setResponse(Inertia.onEmptyResponse(request, response))
+      if (response.status === 200 && (await response.clone().text()).trim() === '') {
+        response = Inertia.onEmptyResponse(request, response)
       }
 
       if (response.status === 302 && ['PUT', 'PATCH', 'DELETE'].includes(request.method)) {
-        setResponse(
-          new Response(response.body, {
-            status: 303,
-            headers: response.headers,
-          }),
-        )
+        response = new Response(response.body, {
+          status: 303,
+          headers: response.headers,
+        })
       }
 
-      // No need to return response as it is available in request context
+      // Set to undefined initially to prevent merging response headers
+      ctx.res = undefined
+      ctx.res = response
     }
   }
 
@@ -103,6 +105,6 @@ export default class Inertia {
   }
 
   protected static onVersionChange(request: Request, response: Response): Response {
-    return Inertia.location(request.url, response)
+    return InertiaCore.location(request, request.url)
   }
 }
