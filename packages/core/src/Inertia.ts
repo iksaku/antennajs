@@ -65,9 +65,13 @@ export class Inertia {
       this._ssr,
     )
   }
-  
-  public static location(url: string, response: Response): Response {
-    if (response.headers.has('X-Inertia')) {
+
+  public static location(request: Request, url: string | URL): Response {
+    if (url instanceof URL) {
+      url = url.href
+    }
+
+    if (request.headers.has('X-Inertia')) {
       return new Response('', {
         status: 409,
         headers: {
