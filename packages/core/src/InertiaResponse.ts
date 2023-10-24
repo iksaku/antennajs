@@ -99,7 +99,7 @@ export class InertiaResponse implements PromiseLike<Response> {
 
     const { head, body } = !this._ssr
       ? {
-          head: '',
+          head: [],
           body: `<div id="${this.htmlId}" data-page="${encode(JSON.stringify(page))}"></div>`,
         }
       : await this._ssr(page)
