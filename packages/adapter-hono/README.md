@@ -40,7 +40,7 @@ app.use(
               name="viewport"
               content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
             />
-            ${head}
+            ${head.join('')}
             <script type="module" src="/app.js"></script>
           </head>
           <body>
@@ -143,7 +143,7 @@ of the rendering cycle:
 
 - `request`: Is the incoming [`Request`]() object.
 - `data`: View-only data that is not passed down to the component. See [Root template data](#root-template-data)
-- `head`: A string of metadata of your page (Only populated when using [SSR](#server-side-rendering)).
+- `head`: An array of strings containing the metadata of your page (Only populated when using [SSR](#server-side-rendering)).
 - `body`: The compiled HTML body of your application.
 
 ```js
@@ -158,7 +158,7 @@ Inertia.middleware({
             name="viewport"
             content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
           />
-          ${head}
+          ${head.join('')}
           <script type="module" src="/app.js"></script>
         </head>
         <body>
