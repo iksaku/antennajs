@@ -1,7 +1,7 @@
 import type { Page } from '@inertiajs/core'
 import { encode } from 'html-entities'
 import { LazyProp } from './LazyProp'
-import { InertiaRenderProps, InertiaSSR, InertiaSharedProps, InertiaVersion, InertiaView } from './types'
+import type { InertiaRenderProps, InertiaSSR, InertiaSharedProps, InertiaVersion, InertiaView } from './types'
 import { assign, objectFilter, value } from './util'
 
 export type ThenableInertiaResponse = PromiseLike<Response> & Omit<InertiaResponse, 'then'>
@@ -51,6 +51,7 @@ export class InertiaResponse implements PromiseLike<Response> {
     return this
   }
 
+  // biome-ignore lint/suspicious/noThenProperty:
   public async then(resolve) {
     const response = await this.toResponse(this.request)
 

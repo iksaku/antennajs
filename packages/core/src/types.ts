@@ -1,5 +1,5 @@
-import { Page } from '@inertiajs/core'
-import { Promisable } from 'type-fest'
+import type { Page } from '@inertiajs/core'
+import type { Promisable } from 'type-fest'
 
 export type InertiaSharedProps = Record<string, unknown>
 export type InertiaVersion = () => Promisable<string | null>

@@ -1,6 +1,6 @@
 import { InertiaResponse } from './InertiaResponse'
 import { LazyProp } from './LazyProp'
-import { InertiaSSR, InertiaSharedProps, InertiaVersion, InertiaView } from './types'
+import type { InertiaSSR, InertiaSharedProps, InertiaVersion, InertiaView } from './types'
 import { assign, retrieve } from './util'
 
 export class Inertia {
@@ -23,6 +23,7 @@ export class Inertia {
   }
 
   public getShared(key: string = null, _default: unknown = undefined) {
+    // biome-ignore lint/complexity/noExtraBooleanCast: Intended to check if an "empty" value is given
     if (!!key) {
       return retrieve(this._sharedProps, key, _default)
     }

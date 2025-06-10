@@ -1,4 +1,4 @@
-import { ObjectEntry } from 'type-fest/source/entry'
+import type { ObjectEntry } from 'type-fest/source/entry'
 
 export function assign(obj: object, key: string | string[], value: unknown): void {
   if (typeof key === 'string') {
@@ -35,16 +35,13 @@ export function objectFilter<TObject>(obj: TObject, predicate: (entry: ObjectEnt
   )
 }
 
-export function tap<TValue extends unknown>(value: TValue, callback: (value: TValue) => void): TValue {
+export function tap<TValue>(value: TValue, callback: (value: TValue) => void): TValue {
   callback(value)
 
   return value
 }
 
-export function value<TValue extends unknown>(
-  value: TValue,
-  ...args: unknown[]
-): TValue extends () => infer R ? R : TValue {
+export function value<TValue>(value: TValue, ...args: unknown[]): TValue extends () => infer R ? R : TValue {
   if (typeof value === 'function') {
     return value(...args)
   }

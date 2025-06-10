@@ -1,13 +1,13 @@
 import {
   Inertia as InertiaCore,
-  InertiaSSR,
-  InertiaSharedProps,
-  InertiaView,
-  ThenableInertiaResponse,
+  type InertiaSSR,
+  type InertiaSharedProps,
+  type InertiaView,
+  type ThenableInertiaResponse,
 } from '@antennajs/core'
 import { filled, tap } from '@antennajs/core/util'
-import { Context, MiddlewareHandler } from 'hono'
-import { Promisable } from 'type-fest'
+import type { Context, MiddlewareHandler } from 'hono'
+import type { Promisable } from 'type-fest'
 
 type InertiaMiddlewareOptions = {
   htmlId?: string
