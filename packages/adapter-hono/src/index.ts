@@ -66,6 +66,7 @@ export default class Inertia {
       await next()
 
       let response = ctx.res
+
       response.headers.set('Vary', 'X-Inertia')
 
       if (!request.headers.get('X-Inertia')) {

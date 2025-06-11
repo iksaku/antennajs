@@ -51,22 +51,17 @@ export class InertiaResponse implements PromiseLike<Response> {
     return this
   }
 
-  // biome-ignore lint/suspicious/noThenProperty:
-  public async then(resolve) {
-    const response = await this.toResponse(this.request)
-
-    if (resolve) {
-      return await resolve(response)
-    }
-
-    return response
+  // biome-ignore lint/suspicious/noThenProperty: Used to chain method calls and automagically convert to a Response.
+  // biome-ignore lint/suspicious/noExplicitAny: Too lazy to write the full type
+  public async then(resolve: any) {
+    return await resolve(this.toResponse())
   }
 
-  protected async toResponse(request: Request): Promise<Response> {
-    const only = (request.headers.get('X-Inertia-Partial-Data') ?? '').split(',').filter(Boolean)
+  protected async toResponse(): Promise<Response> {
+    const only = (this.request.headers.get('X-Inertia-Partial-Data') ?? '').split(',').filter(Boolean)
 
     let props =
-      only && request.headers.get('X-Inertia-Partial-Component') === this._component
+      only && this.request.headers.get('X-Inertia-Partial-Component') === this._component
         ? objectFilter(this._props, ([key]) => only.includes(key))
         : objectFilter(this._props, ([, value]) => !(value instanceof LazyProp))
 
@@ -77,14 +72,14 @@ export class InertiaResponse implements PromiseLike<Response> {
       component: this._component,
       props: props as Page['props'],
       url: value(() => {
-        const url = new URL(request.url)
+        const url = new URL(this.request.url)
 
         return `${url.pathname}${url.search}`
       }),
       version: await this._version(),
     }
 
-    if (request.headers.get('X-Inertia')) {
+    if (this.request.headers.get('X-Inertia')) {
       return new Response(JSON.stringify(page), {
         status: 200,
         headers: {
