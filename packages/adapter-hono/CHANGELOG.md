@@ -1,5 +1,15 @@
 # @antennajs/adapter-hono
 
+## 0.2.1
+
+### Patch Changes
+
+- 44975bf: Fix InertiaResponse not properly working as a thenable
+- 36dc52a: Lint + Format with Biome
+- Updated dependencies [44975bf]
+- Updated dependencies [36dc52a]
+  - @antennajs/core@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes

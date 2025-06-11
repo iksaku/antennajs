@@ -1,5 +1,12 @@
 # @antennajs/core
 
+## 0.2.1
+
+### Patch Changes
+
+- 44975bf: Fix InertiaResponse not properly working as a thenable
+- 36dc52a: Lint + Format with Biome
+
 ## 0.2.0
 
 ### Minor Changes

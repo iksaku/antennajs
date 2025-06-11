@@ -1,9 +1,11 @@
 {
   "name": "@antennajs/adapter-hono",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "description": "The HonoJS adapter for Inertia.js",
-  "contributors": ["Jorge González <yo@jorgeglz.io>"],
+  "contributors": [
+    "Jorge González <yo@jorgeglz.io>"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/iksaku/antennajs.git"
@@ -11,7 +13,9 @@
   "bugs": {
     "url": "https://github.com/iksaku/antennajs/issues"
   },
-  "files": ["./dist"],
+  "files": [
+    "./dist"
+  ],
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
