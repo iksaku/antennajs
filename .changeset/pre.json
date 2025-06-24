@@ -6,6 +6,7 @@
     "@antennajs/core": "0.2.1"
   },
   "changesets": [
+    "all-wings-sing",
     "full-needles-say",
     "strong-lies-lay"
   ]

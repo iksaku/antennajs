@@ -1,5 +1,11 @@
 # @antennajs/core
 
+## 1.0.0-beta.1
+
+### Patch Changes
+
+- 01a7af9: Fix `main` package entry, add `module` package entry
+
 ## 1.0.0-beta.0
 
 ### Major Changes
