@@ -14,16 +14,21 @@
     "url": "https://github.com/iksaku/antennajs/issues"
   },
   "files": [
-    "./dist"
+    "dist"
   ],
   "type": "module",
   "main": "dist/index.js",
-  "types": "dist/types/index.d.ts",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./async": {
+      "types": "./dist/async/index.d.ts",
+      "import": "./dist/async/index.js",
+      "require": "./dist/async/index.cjs"
     }
   },
   "scripts": {
@@ -35,7 +40,8 @@
     "@antennajs/core": "workspace:^"
   },
   "devDependencies": {
-    "hono": "^4.7.11",
+    "@types/node": "^24.0.3",
+    "hono": "^4.8.2",
     "type-fest": "^4.41.0",
     "typescript": "^5.8.3",
     "vite": "^6.3.5"

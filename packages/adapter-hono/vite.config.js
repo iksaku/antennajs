@@ -5,12 +5,15 @@ export default defineConfig({
     sourcemap: true,
     minify: false,
     lib: {
-      entry: 'src/index.ts',
+      entry: {
+        index: 'src/index.ts',
+        'async/index': 'src/async/index.ts',
+      },
       fileName: '[name]',
       formats: ['es', 'cjs'],
     },
     rollupOptions: {
-      external: [],
+      external: ['node:async_hooks'],
     },
   },
 })
