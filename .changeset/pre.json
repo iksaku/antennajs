@@ -1,0 +1,12 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "@antennajs/adapter-hono": "0.2.1",
+    "@antennajs/core": "0.2.1"
+  },
+  "changesets": [
+    "full-needles-say",
+    "strong-lies-lay"
+  ]
+}
