@@ -18,15 +18,15 @@
   ],
   "type": "module",
   "main": "dist/index.js",
-  "types": "dist/types/index.d.ts",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
     "./util": {
-      "types": "./dist/types/util.d.ts",
+      "types": "./dist/util.d.ts",
       "import": "./dist/util/index.js",
       "require": "./dist/util/index.cjs"
     }

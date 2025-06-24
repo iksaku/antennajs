@@ -1,6 +1,7 @@
-import { InertiaResponse } from './InertiaResponse'
+import type { Promisable } from 'type-fest'
+import { InertiaResponse, type ThenableInertiaResponse } from './InertiaResponse'
 import { LazyProp } from './LazyProp'
-import type { InertiaSSR, InertiaSharedProps, InertiaVersion, InertiaView } from './types'
+import type { InertiaSharedProps, InertiaSSR, InertiaVersion, InertiaView } from './types'
 import { assign, retrieve } from './util'
 
 export class Inertia {
@@ -9,7 +10,10 @@ export class Inertia {
   protected _view: InertiaView | undefined = undefined
   protected _ssr: InertiaSSR | undefined = undefined
 
-  public constructor(protected readonly htmlId: string) {}
+  public constructor(protected readonly _rootElementId = 'app') {
+    // Clean up id
+    this._rootElementId = this._rootElementId.replaceAll(/^['"]+|['"]+$/g, '')
+  }
 
   public share(key: string | InertiaSharedProps, value: unknown = undefined): void {
     if (typeof key === 'string') {
@@ -22,7 +26,7 @@ export class Inertia {
     }
   }
 
-  public getShared(key: string = null, _default: unknown = undefined) {
+  public getShared(key: string = null, _default: unknown = undefined): unknown {
     // biome-ignore lint/complexity/noExtraBooleanCast: Intended to check if an "empty" value is given
     if (!!key) {
       return retrieve(this._sharedProps, key, _default)
@@ -39,11 +43,15 @@ export class Inertia {
     this._version = version
   }
 
-  public getVersion() {
-    return this._version()
+  public getVersion(): Promisable<string | null> {
+    if (typeof this._version === 'function') {
+      return this._version()
+    }
+
+    return this._version
   }
 
-  public setView(view: InertiaView | undefined): void {
+  public setView(view: InertiaView): void {
     this._view = view
   }
 
@@ -55,11 +63,11 @@ export class Inertia {
     return new LazyProp(callback)
   }
 
-  public render(request: Request, component: string, props: InertiaSharedProps = {}): InertiaResponse {
+  public render(request: Request, component: string, props: InertiaSharedProps = {}): ThenableInertiaResponse {
     return new InertiaResponse(
       request,
-      this.htmlId,
-      () => this.getVersion(),
+      this._rootElementId,
+      this.getVersion(),
       component,
       { ...this._sharedProps, ...props },
       this._view,

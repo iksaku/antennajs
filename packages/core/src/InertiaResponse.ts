@@ -1,7 +1,8 @@
 import type { Page } from '@inertiajs/core'
 import { encode } from 'html-entities'
+import type { Promisable } from 'type-fest'
 import { LazyProp } from './LazyProp'
-import type { InertiaRenderProps, InertiaSSR, InertiaSharedProps, InertiaVersion, InertiaView } from './types'
+import type { InertiaRenderProps, InertiaSharedProps, InertiaSSR, InertiaView } from './types'
 import { assign, objectFilter, value } from './util'
 
 export type ThenableInertiaResponse = PromiseLike<Response> & Omit<InertiaResponse, 'then'>
@@ -11,8 +12,8 @@ export class InertiaResponse implements PromiseLike<Response> {
 
   public constructor(
     protected readonly request: Request,
-    protected readonly htmlId: string,
-    protected _version: InertiaVersion,
+    protected readonly _rootElementId: string,
+    protected _version: Promisable<string | null>,
     protected _component: string,
     protected _props: InertiaSharedProps,
     protected _view: InertiaView | undefined,
@@ -52,7 +53,7 @@ export class InertiaResponse implements PromiseLike<Response> {
   }
 
   // biome-ignore lint/suspicious/noThenProperty: Used to chain method calls and automagically convert to a Response.
-  // biome-ignore lint/suspicious/noExplicitAny: Too lazy to write the full type
+  // biome-ignore lint/suspicious/noExplicitAny: Too lazy to write the full type.
   public async then(resolve: any) {
     return await resolve(this.toResponse())
   }
@@ -76,7 +77,7 @@ export class InertiaResponse implements PromiseLike<Response> {
 
         return `${url.pathname}${url.search}`
       }),
-      version: await this._version(),
+      version: await this._version,
     }
 
     if (this.request.headers.get('X-Inertia')) {
@@ -96,7 +97,7 @@ export class InertiaResponse implements PromiseLike<Response> {
     const { head, body } = !this._ssr
       ? {
           head: [],
-          body: `<div id="${this.htmlId}" data-page="${encode(JSON.stringify(page))}"></div>`,
+          body: `<div id="${this._rootElementId}" data-page="${encode(JSON.stringify(page))}"></div>`,
         }
       : await this._ssr(page)
 
