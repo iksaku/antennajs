@@ -5,5 +5,7 @@
     "@antennajs/adapter-hono": "1.0.0",
     "@antennajs/core": "1.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "ready-poets-build"
+  ]
 }
