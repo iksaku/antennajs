@@ -1,4 +1,5 @@
 import type { InertiaRenderProps, InertiaSharedProps, InertiaSSR, InertiaView } from '@antennajs/core'
+import { Header } from '@antennajs/core'
 import { filled, tap } from '@antennajs/core/util'
 import type { HonoRequest, Next } from 'hono'
 import { createMiddleware as createHonoMiddleware } from 'hono/factory'
@@ -41,13 +42,13 @@ export abstract class Middleware {
 
     let response = ctx.res
 
-    response.headers.set('Vary', 'X-Inertia')
+    response.headers.set('Vary', Header.INERTIA)
 
-    if (!request.header('X-Inertia')) {
+    if (!request.header(Header.INERTIA)) {
       return
     }
 
-    if (request.method === 'GET' && request.header('X-Inertia-Version') !== (await inertia.getVersion())) {
+    if (request.method === 'GET' && request.header(Header.VERSION) !== (await inertia.getVersion())) {
       response = this.onVersionChange(request, response)
     }
 
@@ -133,4 +134,12 @@ export function createMiddlewareFrom(base: typeof Middleware, opts: InertiaMiddl
 
 export function createInertiaMiddleware(opts: InertiaMiddlewareOpts) {
   return createMiddlewareFrom(Middleware, opts)
+}
+
+export function EncryptHistoryMiddleware() {
+  return createHonoMiddleware(async (ctx, next) => {
+    Inertia.from(ctx).encryptHistory()
+
+    await next()
+  })
 }

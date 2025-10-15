@@ -4,6 +4,9 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
 
+    "skipLibCheck": true,
+    "lib": ["ESNext", "ESNext.Object", "WebWorker"],
+
     "declaration": true,
     "declarationDir": "dist"
   },

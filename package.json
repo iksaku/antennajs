@@ -9,9 +9,10 @@
     "build": "pnpm -r --filter='./packages/*' run build"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.0.5",
-    "@changesets/cli": "^2.29.5",
-    "typescript": "^5.8.3",
+    "@biomejs/biome": "^2.2.6",
+    "@changesets/cli": "^2.29.7",
+    "type-fest": "^5.1.0",
+    "typescript": "^5.9.3",
     "vite": "^6.3.5"
   }
 }
