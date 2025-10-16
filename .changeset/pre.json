@@ -6,6 +6,8 @@
     "@antennajs/core": "1.0.0"
   },
   "changesets": [
-    "ready-poets-build"
+    "odd-walls-notice",
+    "ready-poets-build",
+    "shy-doors-prove"
   ]
 }

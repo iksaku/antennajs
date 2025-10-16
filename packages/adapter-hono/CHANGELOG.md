@@ -1,5 +1,13 @@
 # @antennajs/adapter-hono
 
+## 2.0.0-beta.1
+
+### Patch Changes
+
+- 5151f85: fix(adapter-hono): Fix static methods cannot be called in `adapter-hono/async`
+- Updated dependencies [ef8d603]
+  - @antennajs/core@2.0.0-beta.1
+
 ## 2.0.0-beta.0
 
 ### Major Changes

@@ -1,6 +1,6 @@
 {
   "name": "@antennajs/core",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0-beta.1",
   "license": "MIT",
   "description": "An InertiaJS adapter for creating server-driven single page apps fully written in JavaScript.",
   "contributors": [
