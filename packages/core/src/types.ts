@@ -19,7 +19,11 @@ export type InertiaRenderProps = {
 
 export type InertiaView = (props: InertiaRenderProps) => Promisable<string>
 
-export type InertiaSSR = (page: Page) => Promise<{ head: string[]; body: string }>
+export type InertiaPageResponse = Omit<Page, 'props' | 'rememberedState'> & {
+  props: Omit<Page['props'], 'errors'>
+}
+
+export type InertiaSSR = (page: InertiaPageResponse) => Promise<{ head: string[]; body: string }>
 
 export interface ArrayCastable {
   toArray<T = unknown>(): Promisable<T[]>
@@ -37,9 +41,4 @@ export interface ProvidesInertiaProperty {
 
 export type InertiaPrimitive = Arrayable<Primitive | object | ProvidesInertiaProperty>
 
-export type InertiaScrollMetadata = {
-  pageName: string
-  previousPage: number | string | null | undefined
-  nextPage: number | string | null | undefined
-  currentPage: number | string | null
-}
+export type InertiaScrollMetadata = Omit<InertiaPageResponse['scrollProps'], 'reset'>

@@ -1,15 +1,15 @@
-import type { Page } from '@inertiajs/core'
 import { isFunction, isPlainObject, mapValues, merge, omit, omitBy, pick, pickBy, toMerged, uniq } from 'es-toolkit'
-import { castArray, set } from 'es-toolkit/compat'
+import { castArray, get, omit as omitDeep, pick as pickDeep, set, unset } from 'es-toolkit/compat'
 import { encode } from 'html-entities'
 import type { Arrayable, Promisable } from 'type-fest'
 import { PropertyContext, RenderContext } from './context'
 import { AlwaysProp, BaseProp, DeferProp, MergeableProp, ScrollProp } from './props'
 import { Header } from './support'
 import type {
+  InertiaPageResponse,
+  InertiaPrimitive,
   InertiaPropsContainer,
   InertiaRenderProps,
-  InertiaScrollMetadata,
   InertiaSharedProps,
   InertiaSSR,
   InertiaView,
@@ -106,11 +106,10 @@ export class InertiaResponse implements PromiseLike<Response> {
   protected async toResponse(): Promise<Response> {
     const props = await this.resolveProperties(this._props)
 
-    // @ts-ignore
-    const page: Page = {
+    const page: InertiaPageResponse = {
       ...{
         component: this._component,
-        props: props as Page['props'],
+        props: props,
         url: value(() => {
           const url = new URL(this.request.url)
 
@@ -182,7 +181,7 @@ export class InertiaResponse implements PromiseLike<Response> {
     const renderContext = new RenderContext(this._component, this.request)
 
     for (const value of this._inertiaPropsProviders) {
-      props = toMerged(props, value.toInertiaProperties(renderContext))
+      props = toMerged(props, await value.toInertiaProperties(renderContext))
     }
 
     return props
@@ -195,18 +194,20 @@ export class InertiaResponse implements PromiseLike<Response> {
    */
   protected resolvePartialProperties(props: InertiaSharedProps): InertiaSharedProps {
     if (!this.isPartial()) {
-      return pickBy(props, (value) => value instanceof BaseProp && !value.ignoreFirstLoad)
+      return pickBy(props, (value) => !(value instanceof BaseProp && value.ignoreFirstLoad))
     }
 
     const only = (this.request.headers.get(Header.PARTIAL_ONLY) ?? '').split(',').filter(Boolean)
     const except = (this.request.headers.get(Header.PARTIAL_EXCEPT) ?? '').split(',').filter(Boolean)
 
     if (only.length) {
-      props = pick(props, only)
+      // Filter properties even if in dot-notation.
+      props = pickDeep(props, only)
     }
 
     if (except.length) {
-      props = omit(props, except)
+      // Omit properties even if in dot-notation.
+      props = omitDeep(props, except)
     }
 
     return props
@@ -233,11 +234,14 @@ export class InertiaResponse implements PromiseLike<Response> {
       }
 
       if (Array.isArray(value) || isPlainObject(value)) {
-        value = await this.resolveArrayableProperties(value)
+        value = await this.resolveArrayableProperties(value, false)
       }
 
       if (unpackDotProps && typeof key === 'string' && key.includes('.')) {
+        // Deeply assign dot-notation property
         set(props, key, value)
+
+        // Delete full dot-notation key
         delete props[key]
       } else {
         props[key] = value
@@ -250,13 +254,15 @@ export class InertiaResponse implements PromiseLike<Response> {
   protected resolveOnly(props: InertiaSharedProps): InertiaSharedProps {
     const only = (this.request.headers.get(Header.PARTIAL_ONLY) ?? '').split(',').filter(Boolean)
 
-    return pick(props, only)
+    // Filter properties even if in dot-notation.
+    return pickDeep(props, only)
   }
 
   protected resolveExcept(props: InertiaSharedProps): InertiaSharedProps {
     const except = (this.request.headers.get(Header.PARTIAL_EXCEPT) ?? '').split(',').filter(Boolean)
 
-    return omit(props, except)
+    // Omit properties even if in dot-notation.
+    return omitDeep(props, except)
   }
 
   protected resolveAlways(props: InertiaSharedProps): InertiaSharedProps {
@@ -339,7 +345,7 @@ export class InertiaResponse implements PromiseLike<Response> {
     let props = pickBy(this._props, (prop) => prop instanceof MergeableProp) as InertiaSharedProps<MergeableProp>
     props = pickBy(props, (prop) => prop.shouldMerge())
     props = omit(props, resetProps)
-    props = pick(props, onlyProps)
+    props = onlyProps.length === 0 ? props : pick(props, onlyProps)
     props = omit(props, exceptProps)
 
     return props
@@ -419,7 +425,7 @@ export class InertiaResponse implements PromiseLike<Response> {
     const deferredProps = mapValues(
       objectGroupBy(
         // Only keep Defer props
-        pickBy(this._props, (prop) => prop instanceof DeferProp) as InertiaSharedProps<DeferProp<any>>,
+        pickBy(this._props, (prop) => prop instanceof DeferProp) as InertiaSharedProps<DeferProp<InertiaPrimitive>>,
         // And make groups
         (prop) => prop.group(),
       ),
@@ -433,20 +439,20 @@ export class InertiaResponse implements PromiseLike<Response> {
   /**
    * Resolve scroll props configuration for client-side infinite scrolling.
    */
-  protected resolveScrollProps(): { scrollProps?: Partial<InertiaScrollMetadata & { reset: boolean }> } {
+  protected resolveScrollProps(): { scrollProps?: InertiaPageResponse['scrollProps'] } {
     const resetProps = this.getResetProps()
 
     const scrollProps = mapValues(
       // Only keep Scroll props
       pickBy(this.getMergePropsForRequest(false), (prop) => prop instanceof ScrollProp) as InertiaSharedProps<
-        ScrollProp<any>
+        ScrollProp<InertiaPrimitive>
       >,
       // And resolve each props' metadata
       (prop, key) => ({
         ...prop.metadata(),
         reset: resetProps.includes(key),
       }),
-    )
+    ) as InertiaPageResponse['scrollProps']
 
     return Object.keys(scrollProps).length > 0 ? { scrollProps } : {}
   }
