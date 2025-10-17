@@ -1,5 +1,13 @@
 # @antennajs/adapter-hono
 
+## 2.0.0-beta.3
+
+### Patch Changes
+
+- c8be4fb: fix(ScrollProps): Throw error after making sure we cannot get a scroll metadata provider
+- Updated dependencies [c8be4fb]
+  - @antennajs/core@2.0.0-beta.3
+
 ## 2.0.0-beta.2
 
 ### Patch Changes

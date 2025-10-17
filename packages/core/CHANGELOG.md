@@ -1,5 +1,11 @@
 # @antennajs/core
 
+## 2.0.0-beta.3
+
+### Patch Changes
+
+- c8be4fb: fix(ScrollProps): Throw error after making sure we cannot get a scroll metadata provider
+
 ## 2.0.0-beta.2
 
 ### Patch Changes
