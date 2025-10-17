@@ -1,5 +1,15 @@
 # @antennajs/adapter-hono
 
+## 2.0.0-beta.2
+
+### Patch Changes
+
+- 019d69e: enhancement(infinite-scroll): Ability for scroll value to provide scroll metadata
+  - Testing ability to omit scroll "data wrapper".
+  - Fixed typings from ScrollMetadata
+- Updated dependencies [019d69e]
+  - @antennajs/core@2.0.0-beta.2
+
 ## 2.0.0-beta.1
 
 ### Patch Changes

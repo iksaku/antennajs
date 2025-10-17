@@ -6,6 +6,7 @@
     "@antennajs/core": "1.0.0"
   },
   "changesets": [
+    "clean-animals-refuse",
     "odd-walls-notice",
     "ready-poets-build",
     "shy-doors-prove"
