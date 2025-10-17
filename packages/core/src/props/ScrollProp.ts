@@ -41,12 +41,6 @@ export class ScrollProp<TValue extends InertiaPrimitive> extends MergeableProp {
   }
 
   protected async resolveMetadataProvider(): Promise<BaseScrollMetadata> {
-    if (!this._metadata) {
-      throw new Error(
-        'Inertia Scroll Metadata Provider was not provided. Please bring your own scroll metadata provider.',
-      )
-    }
-
     if (this._metadata instanceof BaseScrollMetadata) {
       return this._metadata
     }
@@ -65,6 +59,12 @@ export class ScrollProp<TValue extends InertiaPrimitive> extends MergeableProp {
       }
 
       return new ScrollMetadata(metadata.pageName, metadata.previousPage, metadata.nextPage, metadata.currentPage)
+    }
+
+    if (!this._metadata) {
+      throw new Error(
+        'Inertia Scroll Metadata Provider was not provided. Please bring your own scroll metadata provider.',
+      )
     }
 
     return this._metadata(value)
