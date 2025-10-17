@@ -1,13 +1,13 @@
 import { AsyncLocalStorage } from 'node:async_hooks'
 import type {
   AlwaysProp,
+  BaseScrollMetadata,
   DeferProp,
   InertiaPrimitive,
   LazyProp,
   MaybeResolvable,
   MergeProp,
   OptionalProp,
-  ProvidesScrollMetadata,
   Resolvable,
   ScrollProp,
 } from '@antennajs/core'
@@ -27,7 +27,7 @@ type InertiaProxy = BaseInertia & {
   scroll<TValue extends InertiaPrimitive>(
     value: MaybeResolvable<TValue>,
     wrapper?: string,
-    metadata?: ProvidesScrollMetadata | ((value: Promisable<TValue>) => ProvidesScrollMetadata),
+    metadata?: BaseScrollMetadata | ((value: Promisable<TValue>) => BaseScrollMetadata),
   ): ScrollProp<TValue>
   location(request: Request, url: string | URL): Response
 }
