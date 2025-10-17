@@ -1,5 +1,5 @@
 import { isFunction, isPlainObject, mapValues, merge, omit, omitBy, pick, pickBy, toMerged, uniq } from 'es-toolkit'
-import { castArray, get, omit as omitDeep, pick as pickDeep, set, unset } from 'es-toolkit/compat'
+import { castArray, omit as omitDeep, pick as pickDeep, set } from 'es-toolkit/compat'
 import { encode } from 'html-entities'
 import type { Arrayable, Promisable } from 'type-fest'
 import { PropertyContext, RenderContext } from './context'
@@ -122,7 +122,7 @@ export class InertiaResponse implements PromiseLike<Response> {
       ...this.resolveMergeProps(),
       ...this.resolveDeferredProps(),
       ...this.resolveCacheDirections(),
-      ...this.resolveScrollProps(),
+      ...(await this.resolveScrollProps()),
     }
 
     if (this.request.headers.get(Header.INERTIA)) {
@@ -401,7 +401,7 @@ export class InertiaResponse implements PromiseLike<Response> {
   }
 
   /**
-   * Resolve props that should be deep merged.
+   * Resolve props that should be deeply merged.
    */
   protected resolveDeepMergeProps(props: InertiaSharedProps<MergeableProp>): string[] {
     return Object.keys(pickBy(props, (prop) => prop.shouldDeepMerge()))
@@ -439,20 +439,21 @@ export class InertiaResponse implements PromiseLike<Response> {
   /**
    * Resolve scroll props configuration for client-side infinite scrolling.
    */
-  protected resolveScrollProps(): { scrollProps?: InertiaPageResponse['scrollProps'] } {
+  protected async resolveScrollProps(): Promise<{ scrollProps?: InertiaPageResponse['scrollProps'] }> {
     const resetProps = this.getResetProps()
 
-    const scrollProps = mapValues(
-      // Only keep Scroll props
+    const scrollProps: InertiaPageResponse['scrollProps'] = {}
+
+    for (const [key, prop] of Object.entries(
       pickBy(this.getMergePropsForRequest(false), (prop) => prop instanceof ScrollProp) as InertiaSharedProps<
         ScrollProp<InertiaPrimitive>
       >,
-      // And resolve each props' metadata
-      (prop, key) => ({
-        ...prop.metadata(),
+    )) {
+      scrollProps[key] = {
+        ...(await prop.metadata()),
         reset: resetProps.includes(key),
-      }),
-    ) as InertiaPageResponse['scrollProps']
+      }
+    }
 
     return Object.keys(scrollProps).length > 0 ? { scrollProps } : {}
   }

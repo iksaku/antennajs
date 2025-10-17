@@ -1,7 +1,7 @@
 import type { InertiaScrollMetadata } from '../types'
-import { ProvidesScrollMetadata } from './ProvidesScrollMetadata'
+import { BaseScrollMetadata } from './BaseScrollMetadata'
 
-export class ScrollMetadata extends ProvidesScrollMetadata {
+export class ScrollMetadata extends BaseScrollMetadata {
   public constructor(
     protected _pageName: InertiaScrollMetadata['pageName'],
     protected _previousPage: InertiaScrollMetadata['previousPage'],

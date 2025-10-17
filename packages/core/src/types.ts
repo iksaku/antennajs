@@ -1,6 +1,7 @@
-import type { Page } from '@inertiajs/core'
+import type { ScrollProp as InertiaScrollProp, Page } from '@inertiajs/core'
 import type { Arrayable, Primitive, Promisable } from 'type-fest'
 import type { PropertyContext, RenderContext } from './context'
+import type { BaseScrollMetadata } from './scroll'
 
 export type Resolvable<T> = (...args: unknown[]) => Promisable<T>
 export type MaybeResolvable<T> = Promisable<T> | Resolvable<T>
@@ -41,4 +42,7 @@ export interface ProvidesInertiaProperty {
 
 export type InertiaPrimitive = Arrayable<Primitive | object | ProvidesInertiaProperty>
 
-export type InertiaScrollMetadata = Omit<InertiaPageResponse['scrollProps'], 'reset'>
+export type InertiaScrollMetadata = Omit<InertiaScrollProp, 'reset'>
+export interface ProvidesInertiaScrollMetadata {
+  toInertiaScrollMetadata(): InertiaScrollMetadata | BaseScrollMetadata
+}

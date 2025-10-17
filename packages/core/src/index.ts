@@ -1,6 +1,6 @@
 export * from './Inertia'
 export * from './InertiaResponse'
 export { AlwaysProp, DeferProp, LazyProp, MergeProp, OptionalProp, ScrollProp } from './props'
-export { ProvidesScrollMetadata, ScrollMetadata } from './scroll'
+export { BaseScrollMetadata, ScrollMetadata } from './scroll'
 export { Header } from './support'
 export * from './types'

@@ -1,7 +1,13 @@
 import { isFunction } from 'es-toolkit'
 import { isObjectLike, set } from 'es-toolkit/compat'
 import type { Promisable } from 'type-fest'
-import type { ArrayCastable, MaybeResolvable, ProvidesInertiaProperties, ProvidesInertiaProperty } from './types'
+import type {
+  ArrayCastable,
+  MaybeResolvable,
+  ProvidesInertiaProperties,
+  ProvidesInertiaProperty,
+  ProvidesInertiaScrollMetadata,
+} from './types'
 
 export function tap<TValue>(value: TValue, callback: (value: TValue) => void): TValue {
   callback(value)
@@ -55,6 +61,10 @@ export function providesInertiaProperties(obj: unknown): obj is ProvidesInertiaP
 
 export function castsToInertiaProperty(obj: unknown): obj is ProvidesInertiaProperty {
   return isObjectAndContainsMethod(obj, 'toInertiaProperty')
+}
+
+export function providesInertiaScrollMetadata(obj: unknown): obj is ProvidesInertiaScrollMetadata {
+  return isObjectAndContainsMethod(obj, 'toInertiaScrollMetadata')
 }
 
 export function objectPartition<V>(

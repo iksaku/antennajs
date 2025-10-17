@@ -1,8 +1,8 @@
 import type { Promisable } from 'type-fest'
-import { ProvidesScrollMetadata } from '../scroll/ProvidesScrollMetadata'
+import { BaseScrollMetadata, ScrollMetadata } from '../scroll'
 import { Header } from '../support'
 import type { InertiaPrimitive, InertiaScrollMetadata, MaybeResolvable } from '../types'
-import { value } from '../util'
+import { providesInertiaScrollMetadata, value } from '../util'
 import { MergeableProp } from './MergeableProp'
 
 /**
@@ -23,37 +23,55 @@ export class ScrollProp<TValue extends InertiaPrimitive> extends MergeableProp {
 
   public constructor(
     protected value: MaybeResolvable<TValue>,
-    protected wrapper = 'data',
-    protected _metadata?: ProvidesScrollMetadata | ((value: Promisable<TValue>) => ProvidesScrollMetadata),
+    protected wrapper?: string,
+    protected _metadata?: BaseScrollMetadata | ((value: TValue) => Promisable<BaseScrollMetadata>),
   ) {
     super()
     this._merge = true
   }
 
   public configureMergeIntent(request: Request): this {
+    if (!this.wrapper) {
+      return this
+    }
+
     return request.headers.get(Header.INERTIA_INFINITE_SCROLL_MERGE_INTENT) === 'prepend'
       ? this.prepend(this.wrapper)
       : this.append(this.wrapper)
   }
 
-  protected resolveMetadataProvider(): ProvidesScrollMetadata {
+  protected async resolveMetadataProvider(): Promise<BaseScrollMetadata> {
     if (!this._metadata) {
       throw new Error(
         'Inertia Scroll Metadata Provider was not provided. Please bring your own scroll metadata provider.',
       )
     }
 
-    if (this._metadata instanceof ProvidesScrollMetadata) {
+    if (this._metadata instanceof BaseScrollMetadata) {
       return this._metadata
     }
 
-    const value = this.resolve()
+    const value = await this.resolve()
+
+    if (value instanceof BaseScrollMetadata) {
+      return value
+    }
+
+    if (providesInertiaScrollMetadata(value)) {
+      const metadata = value.toInertiaScrollMetadata()
+
+      if (metadata instanceof BaseScrollMetadata) {
+        return metadata
+      }
+
+      return new ScrollMetadata(metadata.pageName, metadata.previousPage, metadata.nextPage, metadata.currentPage)
+    }
 
     return this._metadata(value)
   }
 
-  public metadata(): InertiaScrollMetadata {
-    const metadataProvider = this.resolveMetadataProvider()
+  public async metadata(): Promise<InertiaScrollMetadata> {
+    const metadataProvider = await this.resolveMetadataProvider()
 
     return {
       pageName: metadataProvider.getPageName(),

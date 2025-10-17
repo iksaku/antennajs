@@ -1,2 +1,2 @@
-export { ProvidesScrollMetadata } from './ProvidesScrollMetadata'
+export { BaseScrollMetadata } from './BaseScrollMetadata'
 export { ScrollMetadata } from './ScrollMetadata'

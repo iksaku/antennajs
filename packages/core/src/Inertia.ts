@@ -2,7 +2,7 @@ import { get, set } from 'es-toolkit/compat'
 import type { Promisable } from 'type-fest'
 import { InertiaResponse, type ThenableInertiaResponse } from './InertiaResponse'
 import { AlwaysProp, DeferProp, LazyProp, MergeProp, OptionalProp, ScrollProp } from './props'
-import type { ProvidesScrollMetadata } from './scroll'
+import type { BaseScrollMetadata } from './scroll'
 import { Header } from './support'
 import type {
   InertiaPrimitive,
@@ -104,9 +104,9 @@ export class Inertia {
 
   public static scroll<TValue extends InertiaPrimitive>(
     value: MaybeResolvable<TValue>,
-    wrapper = 'data',
-    metadata?: ProvidesScrollMetadata | ((value: Promisable<TValue>) => ProvidesScrollMetadata),
-  ): ScrollProp<TValue> {
+    wrapper?: string,
+    metadata?: BaseScrollMetadata | ((value: Promisable<TValue>) => Promisable<BaseScrollMetadata>),
+  ): ScrollProp<Promisable<TValue>> {
     return new ScrollProp(value, wrapper, metadata)
   }
 

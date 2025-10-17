@@ -1,6 +1,6 @@
 import type { InertiaScrollMetadata } from '../types'
 
-export abstract class ProvidesScrollMetadata {
+export abstract class BaseScrollMetadata {
   public abstract getPageName(): InertiaScrollMetadata['pageName']
 
   public abstract getPreviousPage(): InertiaScrollMetadata['previousPage']
