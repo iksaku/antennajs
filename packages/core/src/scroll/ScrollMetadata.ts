@@ -16,14 +16,14 @@ export class ScrollMetadata extends BaseScrollMetadata {
   }
 
   public getPreviousPage(): InertiaScrollMetadata['previousPage'] {
-    return this._previousPage
+    return this._previousPage ?? null
   }
 
   public getNextPage(): InertiaScrollMetadata['nextPage'] {
-    return this._nextPage
+    return this._nextPage ?? null
   }
 
   public getCurrentPage(): InertiaScrollMetadata['currentPage'] {
-    return this._currentPage
+    return this._currentPage ?? null
   }
 }
