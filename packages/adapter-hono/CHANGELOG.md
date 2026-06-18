@@ -1,5 +1,36 @@
 # @antennajs/adapter-hono
 
+## 2.0.0
+
+### Major Changes
+
+- eaaf87a: InertiaJS 2.0 compatibility
+
+  ### What Changed
+
+  We have upgraded the core implementation to be compatible with the new InertiaJS v2 features.
+  This also applies for our HonoJS adapter (currently the only we distribute).
+
+  ### Breaking changes
+
+  - There were some improvements in typings across all codebase. This shouldn't represent an inconvenience
+    for most of you, instead, it should more clearly outline what data types we support in every API
+
+  ### Patch Changes
+
+  - 9cc8989: enhancement(infinite-scroll): Ability for scroll value to provide scroll metadata
+    - Testing ability to omit scroll "data wrapper".
+    - Fixed typings from ScrollMetadata
+  - c8be4fb: fix(ScrollProps): Throw error after making sure we cannot get a scroll metadata provider
+  - 5151f85: fix(adapter-hono): Fix static methods cannot be called in `adapter-hono/async`
+  - Updated dependencies [9cc8989]
+  - Updated dependencies [a368cec]
+  - Updated dependencies [c8be4fb]
+  - Updated dependencies [ef8d603]
+  - Updated dependencies [eaaf87a]
+  - Updated dependencies [d298183]
+    - @antennajs/core@2.0.0
+
 ## 2.0.0-beta.3
 
 ### Patch Changes

@@ -1,5 +1,38 @@
 # @antennajs/core
 
+## 2.0.0
+
+### Major Changes
+
+- eaaf87a: InertiaJS 2.0 compatibility
+
+  ### What Changed
+
+  We have upgraded the core implementation to be compatible with the new InertiaJS v2 features.
+  This also applies for our HonoJS adapter (currently the only we distribute).
+
+  ### Breaking changes
+
+  - There were some improvements in typings across all codebase. This shouldn't represent an inconvenience
+    for most of you, instead, it should more clearly outline what data types we support in every API
+
+  ### Patch Changes
+
+  - 9cc8989: enhancement(infinite-scroll): Ability for scroll value to provide scroll metadata
+    - Testing ability to omit scroll "data wrapper".
+    - Fixed typings from ScrollMetadata
+  - a368cec: fix: Nullable ScrollMetadata methods
+  - c8be4fb: fix(ScrollProps): Throw error after making sure we cannot get a scroll metadata provider
+  - ef8d603: fix(core): Fixed response props resolvers. Improved typings
+    - Missing `await` when resolving `toInertiaProperties()` methods.
+    - Fixed `Inertia.resolvePartialProperties()` only resolving `BaseProp` instances for full requests.
+    - Fixed resolving properties from `only` and `except` headers not supporting dot-notation filtering.
+    - Fixed `Inertia.resolveArrayableProperties()` trying to resolve dot-notated property keys in nested object/arrays.
+    - Fixed `Inertia.resolveAlways()` always filtering `onlyProps` even if there were no keys listed.
+    - Improved internal typings to keep as close as client-side Inertia typings, but only with the types we need on the server-side.
+
+  - d298183: chore: Allow esbuild in workspace
+
 ## 2.0.0-beta.3
 
 ### Patch Changes
