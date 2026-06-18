@@ -1,39 +1,13 @@
-import type { ObjectEntry } from 'type-fest/source/entry'
-
-export function assign(obj: object, key: string | string[], value: unknown): void {
-  if (typeof key === 'string') {
-    key = key.split('.')
-  }
-
-  if (key.length < 2) {
-    obj[key[0]] = value
-    return
-  }
-
-  const k = key.shift()
-
-  if (obj[k] === null || typeof obj[k] !== 'object') {
-    obj[k] = {}
-  }
-
-  assign(obj[k], key, value)
-}
-
-export function retrieve(obj: object, key: string, _default: unknown = undefined): unknown {
-  try {
-    return key.split('.').reduce((obj, key) => obj[key], obj)
-  } catch {
-    return _default
-  }
-}
-
-export function objectFilter<TObject>(obj: TObject, predicate: (entry: ObjectEntry<TObject>) => boolean): object {
-  return Object.fromEntries(
-    Object.entries(obj)
-      // @ts-ignore
-      .filter(predicate),
-  )
-}
+import { isFunction } from 'es-toolkit'
+import { isObjectLike, set } from 'es-toolkit/compat'
+import type { Promisable } from 'type-fest'
+import type {
+  ArrayCastable,
+  MaybeResolvable,
+  ProvidesInertiaProperties,
+  ProvidesInertiaProperty,
+  ProvidesInertiaScrollMetadata,
+} from './types'
 
 export function tap<TValue>(value: TValue, callback: (value: TValue) => void): TValue {
   callback(value)
@@ -41,12 +15,11 @@ export function tap<TValue>(value: TValue, callback: (value: TValue) => void): T
   return value
 }
 
-export function value<TValue>(value: TValue, ...args: unknown[]): TValue extends () => infer R ? R : TValue {
-  if (typeof value === 'function') {
+export function value<T>(value: MaybeResolvable<T>, ...args: unknown[]): Promisable<T> {
+  if (isFunction(value)) {
     return value(...args)
   }
 
-  // @ts-ignore
   return value
 }
 
@@ -72,4 +45,57 @@ export function blank(value: unknown): boolean {
 
 export function filled(value: unknown): boolean {
   return !blank(value)
+}
+
+function isObjectAndContainsMethod(obj: unknown, method: string): boolean {
+  return isObjectLike(obj) && Object.hasOwn(obj as object, method) && isFunction(obj[method])
+}
+
+export function castsToArray(obj: unknown): obj is ArrayCastable {
+  return isObjectAndContainsMethod(obj, 'toArray')
+}
+
+export function providesInertiaProperties(obj: unknown): obj is ProvidesInertiaProperties {
+  return isObjectAndContainsMethod(obj, 'toInertiaProperties')
+}
+
+export function castsToInertiaProperty(obj: unknown): obj is ProvidesInertiaProperty {
+  return isObjectAndContainsMethod(obj, 'toInertiaProperty')
+}
+
+export function providesInertiaScrollMetadata(obj: unknown): obj is ProvidesInertiaScrollMetadata {
+  return isObjectAndContainsMethod(obj, 'toInertiaScrollMetadata')
+}
+
+export function objectPartition<V>(
+  obj: Record<string, V>,
+  isInTruthy: (value: V, key: string) => boolean,
+): [truthy: Record<string, V>, falsy: Record<string, V>] {
+  const truthy: Record<string, V> = {}
+  const falsy: Record<string, V> = {}
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (isInTruthy(value, key)) {
+      truthy[key] = value
+    } else {
+      falsy[key] = value
+    }
+  }
+
+  return [truthy, falsy]
+}
+
+export function objectGroupBy<T extends object, K extends Extract<keyof T, string>, GK extends string>(
+  obj: T,
+  getKeyFromItem: (value: T[K], key: string) => GK,
+): Record<GK, Record<string, T[K]>> {
+  const groups: Record<string, Record<K, T[K]>> = {}
+
+  for (const [key, value] of Object.entries(obj)) {
+    const groupKey = getKeyFromItem(value, key)
+
+    set(groups, [groupKey, key], value)
+  }
+
+  return groups
 }
